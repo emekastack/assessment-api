@@ -4,6 +4,9 @@ from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from app.core.config import settings
 from fastapi.responses import JSONResponse
+from app.db.database import engine
+from app.db import models
+from app.api import users, partner_requests
 
 logger = get_logger(__name__)
 
@@ -11,16 +14,23 @@ logger = get_logger(__name__)
 async def lifespan(app: FastAPI):
     # Startup code
     logger.info("Starting up the application...")
+    # Create database tables
+    models.Base.metadata.create_all(bind=engine)
+    logger.info("Database tables created successfully")
     yield
     # Shutdown code
     logger.info("Shutting down the application...")
 
 app = FastAPI(
     title="Dealnest Assessment API",
-    description="An API for managing users and items.",
+    description="An API for managing partner requests and users.",
     version="1.0.0",
     lifespan=lifespan,
 )
+
+# Include API routers
+app.include_router(users.router)
+app.include_router(partner_requests.router)
 
 # Global Exception Handler for RequestValidationError (Pydantic validation errors)
 @app.exception_handler(RequestValidationError)

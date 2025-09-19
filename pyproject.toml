@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Emeka Rex Chukwu <emekarexchukwu@gmail.com>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -11,6 +12,9 @@ fastapi = "^0.116.2"
 python-dotenv = "^1.1.1"
 uvicorn = {extras = ["standard"], version = "^0.35.0"}
 pydantic-settings = "^2.10.1"
+sqlalchemy = "^2.0.36"
+alembic = "^1.14.0"
+email-validator = "^2.1.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -18,6 +22,7 @@ pytest = "^8.4.2"
 flake8 = "^7.3.0"
 black = "^25.9.0"
 isort = "^6.0.1"
+httpx = "^0.27.0"
 
 [tool.black]
 line-length = 100
