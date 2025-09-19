@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.env.*
+!.env.example
+!.env.test
+.venv/
+venv/
+env/
+
+# Poetry
+poetry.lock # Usually committed, but can be ignored if everyone runs `poetry install`
+# If you commit poetry.lock, remove the line above.
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
