@@ -6,7 +6,7 @@ from app.core.config import settings
 from fastapi.responses import JSONResponse
 from app.db.database import engine
 from app.db import models
-from app.api import users, partner_requests
+from app.api import users, partner_requests, chat
 
 logger = get_logger(__name__)
 
@@ -31,6 +31,7 @@ app = FastAPI(
 # Include API routers
 app.include_router(users.router)
 app.include_router(partner_requests.router)
+app.include_router(chat.router)
 
 # Global Exception Handler for RequestValidationError (Pydantic validation errors)
 @app.exception_handler(RequestValidationError)

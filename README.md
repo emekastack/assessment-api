@@ -1,14 +1,27 @@
-# DealNest Partner Request API
+# DealNest Partner Request & Chat API
 
-A minimal FastAPI application that implements a partner request workflow system for DealNest. Users can send partner requests to connect with other users, and recipients can accept or reject these requests.
+A comprehensive FastAPI application that implements partner request workflow and real-time chat functionality for DealNest. Users can send partner requests to connect with other users, engage in real-time chat with presence tracking, and receive read receipts.
 
 ## Features
 
+### Partner Request System
 - **User Management**: Create and manage users with email and name
 - **Partner Requests**: Send, receive, and respond to partner requests
 - **Partnership Creation**: Automatic partnership creation when requests are accepted
 - **Email Notifications**: Mock email notifications for request events
+
+### Real-Time Chat System
+- **Chat Channels**: Create channels with multiple users
+- **Real-Time Messaging**: WebSocket-based instant messaging
+- **Presence Tracking**: See who's online/offline with last seen timestamps
+- **Read Receipts**: Know when messages have been read
+- **WebSocket Events**: Real-time presence changes and message notifications
+
+### Technical Features
 - **SQLite Database**: Simple SQLite database for data persistence
+- **Redis Support**: Optional Redis for presence storage (falls back to in-memory)
+- **Comprehensive Testing**: 24 tests covering all functionality
+- **Auto Documentation**: Interactive API docs at `/docs`
 
 ## Requirements
 
@@ -70,6 +83,17 @@ A minimal FastAPI application that implements a partner request workflow system 
 - `GET /partner-requests/received/{user_id}/` - Get pending requests received by a user
 - `POST /partner-requests/respond/` - Respond to a partner request (accept/reject)
 
+### Chat System
+
+- `POST /chat/channels/` - Create a new chat channel
+- `GET /chat/channels/{channel_id}` - Get channel details
+- `POST /chat/channels/{channel_id}/messages/` - Send a message to a channel
+- `GET /chat/channels/{channel_id}/messages/` - Get messages from a channel
+- `POST /chat/messages/{message_id}/mark-read/` - Mark a message as read
+- `GET /chat/presence/{user_id}` - Get user presence status
+- `GET /chat/presence/online/` - Get list of online users
+- `WebSocket /chat/ws/{user_id}` - Real-time WebSocket connection
+
 ## Usage Examples
 
 ### 1. Create Users
@@ -114,13 +138,39 @@ curl -X POST "http://localhost:8004/partner-requests/respond/" \
      -d '{"request_id": 1, "action": "reject"}'
 ```
 
+### 5. Chat System
+
+```bash
+# Create a chat channel
+curl -X POST "http://localhost:8004/chat/channels/" \
+     -H "Content-Type: application/json" \
+     -d '{"name": "General Chat", "member_ids": [1, 2]}'
+
+# Send a message
+curl -X POST "http://localhost:8004/chat/channels/1/messages/" \
+     -H "Content-Type: application/json" \
+     -d '{"sender_id": 1, "body": "Hello everyone!"}'
+
+# Mark message as read
+curl -X POST "http://localhost:8004/chat/messages/1/mark-read/"
+
+# Check user presence
+curl -X GET "http://localhost:8004/chat/presence/1/"
+```
+
 ## Database
 
 The application uses SQLite with the following tables:
 
+### Core Tables
 - **users**: User information (id, email, name, created_at)
 - **partner_requests**: Partner requests (id, sender_id, recipient_id, status, created_at)
 - **partnerships**: Created partnerships (id, user_a_id, user_b_id, created_at)
+
+### Chat Tables
+- **chat_channels**: Chat channels (id, name, created_at)
+- **channel_members**: Many-to-many relationship between channels and users
+- **messages**: Chat messages (id, sender_id, channel_id, body, is_read, created_at)
 
 The database file (`dealnest.db`) is created automatically when the application starts.
 
@@ -153,6 +203,27 @@ JWT_EXPIRE_MINUTES=30
 
 Copy `.env.example` to `.env` and modify the values as needed for your environment.
 
+## Frontend Demo
+
+A complete HTML/JavaScript demo is included to showcase the real-time chat functionality:
+
+1. **Start the API server**:
+   ```bash
+   poetry run python -m app.main
+   ```
+
+2. **Open the demo**: Open `static/chat_demo.html` in your browser
+
+3. **Features demonstrated**:
+   - Connect as different users via WebSocket
+   - Create and join chat channels
+   - Send real-time messages
+   - See presence status (online/offline)
+   - Receive read receipts
+   - View event logs for debugging
+
+The demo includes a modern UI with connection status, message history, presence indicators, and real-time event logging.
+
 ## Testing
 
 Run the test suite:
@@ -165,6 +236,10 @@ The tests cover:
 - User creation and retrieval
 - Partner request creation and validation
 - Request acceptance and rejection
+- Chat channel creation and management
+- Real-time messaging functionality
+- Presence tracking
+- Read receipts
 - Error handling for duplicate requests and invalid actions
 
 ## Email Notifications

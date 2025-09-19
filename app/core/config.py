@@ -11,6 +11,10 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
     APP_PORT: int = 8004
     LOG_LEVEL: str = "INFO"
+    
+    # --- Redis Settings ---
+    REDIS_URL: str = "redis://localhost:6379"
+    REDIS_PRESENCE_TTL: int = 300
 
     model_config = SettingsConfigDict(
         env_file=".env",
