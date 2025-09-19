@@ -32,8 +32,8 @@ A comprehensive FastAPI application that implements partner request workflow and
 
 1. **Clone the repository** (if not already done):
    ```bash
-   git clone <repository-url>
-   cd dealnest-api
+   git clone https://github.com/emekastack/assessment-api
+   cd assessment-api
    ```
 
 2. **Install dependencies using Poetry**:
