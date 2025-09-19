@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 from app.core.logging import get_logger
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from fastapi.responses import JSONResponse
 from app.db.database import engine
@@ -26,6 +27,15 @@ app = FastAPI(
     description="An API for managing partner requests and users.",
     version="1.0.0",
     lifespan=lifespan,
+)
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
 )
 
 # Include API routers

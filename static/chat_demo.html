@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -116,7 +116,7 @@
         .message-body {
             font-size: 14px;
         }
-        .message-input {
+        /* .message-input {
             display: flex;
             gap: 10px;
             margin-top: 10px;
@@ -126,7 +126,7 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-        }
+        } */
         .message-input button {
             padding: 10px 20px;
             background-color: #007bff;
@@ -418,6 +418,7 @@
             }
 
             // Send via REST API
+            console.log({channelId})
             fetch(`http://localhost:8004/chat/channels/${channelId}/messages/`, {
                 method: 'POST',
                 headers: {
@@ -430,6 +431,7 @@
             })
             .then(response => response.json())
             .then(data => {
+                console.log({data})
                 if (data.id) {
                     logEvent(`Message sent successfully (ID: ${data.id})`);
                     document.getElementById('messageInput').value = '';
